@@ -8,59 +8,57 @@ from typing import List
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
-# Add this import for CORS
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware  # lets frontend talk to backend
 
 from document_parser import extract_text_from_document
 from processor import get_structured_data
 
-# Load environment variables (e.g., API keys) when the server starts
+# Load environment variables (like API keys) when the server starts
 load_dotenv()
 
-# Initialize FastAPI application
+# Create FastAPI app instance
 app = FastAPI()
 
-# --- Add this entire block for CORS ---
-# This allows your frontend (from any origin "*") to make requests to your backend.
+# Enable CORS so requests from the frontend aren’t blocked by the browser
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["*"],   # allow requests from anywhere (can be restricted later)
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods (GET, POST, etc.)
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],   # allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],   # allow all headers
 )
-# ------------------------------------
 
 
 def clear_output_file(file_path: str = "output.json"):
     """
-    Clears the content of the specified file for privacy.
-    It writes an empty JSON array to the file.
+    Wipes the given file for privacy by replacing its contents with an empty JSON array.
     """
     try:
         with open(file_path, "w", encoding="utf-8") as f:
-            f.write("[]")  # Write an empty JSON array to clear the file
-        print(f"--- ✅ Privacy cleanup: Cleared {file_path} ---")
+            f.write("[]")
+        print(f"--- ✅ Cleared {file_path} ---")
     except Exception as e:
-        print(f"--- ❌ ERROR: Failed to clear {file_path}. Reason: {e} ---")
+        print(f"--- ❌ Could not clear {file_path}. Reason: {e} ---")
 
 
-# --- Root Endpoint ---
 @app.get("/")
 async def root():
-    """Confirms that the server is running."""
+    """Simple health check endpoint to confirm the API is running."""
     return {"message": "Server is running"}
 
 
-# --- API Endpoint to Process Uploaded Files ---
 @app.post("/process")
 async def process_uploaded_files(
     background_tasks: BackgroundTasks,
     files: List[UploadFile] = File(...)
 ):
     """
-    Receives files, processes them, returns the structured JSON data,
-    and clears the output file in the background for privacy.
+    Handles uploaded files:
+    - saves them temporarily
+    - extracts text
+    - processes with AI
+    - returns structured JSON
+    - schedules cleanup in the background
     """
     uploads_dir = "uploads"
     os.makedirs(uploads_dir, exist_ok=True)
@@ -69,31 +67,37 @@ async def process_uploaded_files(
     for file in files:
         file_path = os.path.join(uploads_dir, file.filename)
         try:
+            # Save uploaded file to disk
             with open(file_path, "wb") as buffer:
                 shutil.copyfileobj(file.file, buffer)
 
+            # Extract raw text and process it with AI
             raw_text = extract_text_from_document(file_path)
             detailed_ai_data = get_structured_data(raw_text)
 
+            # Add original filename to the result for context
             detailed_ai_data['fileName'] = file.filename
             all_detailed_data.append(detailed_ai_data)
 
         except Exception as e:
-            print(f"--- ❌ PIPELINE FAILED for {file.filename} ---")
+            print(f"--- ❌ Failed while processing {file.filename} ---")
             traceback.print_exc()
             raise HTTPException(
                 status_code=500,
-                detail=f"An error occurred while processing {file.filename}: {e}"
+                detail=f"Error while processing {file.filename}: {e}"
             )
         finally:
+            # Always close and remove the temporary file
             if not file.file.closed:
                 file.file.close()
             if os.path.exists(file_path):
                 os.remove(file_path)
 
+    # Save results to disk (temporary, will be cleared later)
     with open("output.json", "w", encoding="utf-8") as f:
         json.dump(all_detailed_data, f, indent=2, ensure_ascii=False)
 
+    # Schedule cleanup after response is sent
     background_tasks.add_task(clear_output_file)
 
     return all_detailed_data
