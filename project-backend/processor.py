@@ -7,7 +7,7 @@ from google import genai
 from pydantic import BaseModel, ValidationError
 
 
-## ---------------- Pydantic Schemas ---------------- ##
+# ---------------- Data Models ---------------- #
 class PartyDetails(BaseModel):
     shipowner_name: Optional[str]
     charterer_name: Optional[str]
@@ -61,74 +61,66 @@ class LaytimeNotes(BaseModel):
 
 
 class SoFSchema(BaseModel):
-    """The overall schema for a Statement of Facts document."""
+    """Represents the structured format for a Statement of Facts document."""
     document_details: DocumentDetails
     events: List[Event]
     laytime_notes: LaytimeNotes
     approvals: Optional[List[Signatory]]
 
 
-## ---------------- Extraction Function ---------------- ##
+# ---------------- Extraction Logic ---------------- #
 def get_structured_data(sof_text: str) -> dict:
     """
-    Takes raw text and returns structured JSON using Gemini 2.5 Flash's JSON Mode.
-    Requires GOOGLE_API_KEY to be set in environment variables.
+    Turn raw Statement of Facts text into structured JSON using Gemini 2.5 Flash.
+    Returns a dictionary that matches the SoFSchema.
     """
 
-    # Debug check: make sure text isn’t empty
-    print(f"\n[DEBUG] Extracted text length: {len(sof_text)} characters")
+    print(f"\n[DEBUG] Text length: {len(sof_text)} characters")
     print("[DEBUG] Text preview >>>")
     print(sof_text[:500], "...\n")
 
     api_key = os.getenv("GOOGLE_API_KEY")
     if not api_key:
-        raise ValueError("GOOGLE_API_KEY environment variable not set.")
+        raise ValueError("Missing GOOGLE_API_KEY environment variable.")
 
     try:
-        # Initialize the Gemini client
         client = genai.Client(api_key=api_key)
 
-        # Define generation configuration
         config = {
             "response_mime_type": "application/json",
             "response_schema": SoFSchema,
             "temperature": 0.0,
         }
 
-        # Improved Prompt
         prompt = f"""
         You are given a Statement of Facts (SOF) document.
         Extract its details into the provided schema (SoFSchema).
 
-        IMPORTANT:
-        - Do not leave fields null if the information is explicitly in the text.
-        - If start and end times are present, calculate duration_hours.
-        - Capture weather remarks, delays, tug usage, approvals, and laytime notes.
-        - Only use null if information is truly missing.
+        Guidelines:
+        - If information is clearly present, do not leave fields blank.
+        - If start and end times are given, calculate duration_hours.
+        - Include notes on weather, delays, tug usage, approvals, and laytime.
+        - Only leave null if the data is truly missing.
 
         --- DOCUMENT TEXT ---
         {sof_text}
         --- END DOCUMENT ---
         """
 
-        # Generate content
         response = client.models.generate_content(
             model="gemini-2.5-flash",
             contents=prompt,
             config=config,
         )
 
-        # Debug: print raw Gemini output before parsing
         print("[DEBUG] Gemini raw output >>>")
         print(response.text, "\n")
 
         try:
-            # Try schema-validated parsing
             parsed: SoFSchema = response.parsed
             return parsed.model_dump()
 
-        except ValidationError as ve:
-            # If schema validation fails, fall back to raw JSON
+        except ValidationError:
             print("[WARNING] Schema validation failed. Falling back to raw JSON.")
             return json.loads(response.text)
 
