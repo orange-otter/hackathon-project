@@ -1,3 +1,5 @@
+Here is the updated `readme.md` with the requested note in the setup section.
+
 # Maritime SOF Analytics 🚢
 
 This full-stack web application extracts, analyzes, and visualizes data from maritime Statement of Facts (SOF) documents. It offers a user-friendly interface to upload SOF files (PDF, DOCX), intelligently parses them, and structures the data into a clean JSON format. The processed information is displayed on an interactive dashboard featuring sortable tables and a Gantt chart timeline of events.
@@ -12,7 +14,7 @@ This full-stack web application extracts, analyzes, and visualizes data from mar
   * **Interactive Frontend**: A sleek, responsive user interface built with HTML, CSS, and vanilla JavaScript without any heavy frameworks.
   * **Rich Data Visualization**: Includes a detailed table view and a dynamic Gantt chart to visualize the timeline of maritime operations.
   * **Flexible Data Export**: Allows users to download the structured data in both **CSV** and **JSON** formats for easy integration.
-
+    
 -----
 
 ## 🛠️ How It Works
@@ -94,11 +96,30 @@ Start the backend server with Uvicorn:
 uvicorn main:app --reload
 ```
 
-The `--reload` flag automatically restarts the server when you save changes to the code.
-
 ### 5\. Open the Web Interface
 
-Once the server is running, you can access the application by opening the `index.html` file directly in your web browser.
+While the backend is running, you can access the application by opening the `index.html` file directly in your web browser.
+
+#### **Note on Hosting:**
+
+If you intend to serve the frontend directly from FastAPI instead of just opening the local HTML files, you'll need to add routes to your `main.py` to serve the static pages. Make sure to import `FileResponse` from `fastapi.responses`.
+
+```python
+from fastapi.responses import FileResponse
+
+# NOTE: Update the file paths if your HTML files are in a different directory.
+@app.get("/")
+async def serve_index():
+    return FileResponse('index.html')
+
+@app.get("/upload")
+async def serve_upload_page():
+    return FileResponse('upload.html')
+
+@app.get("/data")
+async def serve_data_page():
+    return FileResponse('data.html')
+```
 
 -----
 
