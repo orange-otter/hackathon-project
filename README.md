@@ -1,5 +1,3 @@
-Here is the updated `readme.md` with the requested note in the setup section.
-
 # DEMO LINK :
 https://project-sof-analysis.netlify.app/
 
