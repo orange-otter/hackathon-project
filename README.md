@@ -1,18 +1,13 @@
-Here's the improved `readme.md` file.
+Of course. Here is a revised `readme.md` that uses placeholders for images and links and includes relevant tags.
 
 -----
 
 # Maritime SOF Analytics 🚢
 
-\<p align="center"\>
-\<img src="https-raw-githubusercontent-com-user-attachments-files-16368686-sof-demo-gif.gif" alt="Project Demo GIF" width="800"/\>
-\</p\>
+[INSERT PROJECT DEMO GIF HERE]
 
 \<p align="center"\>
-\<img src="[https://img.shields.io/badge/Python-3.8+-blue.svg](https://www.google.com/search?q=https://img.shields.io/badge/Python-3.8%2B-blue.svg)" alt="Python Version"\>
-\<img src="[https://img.shields.io/badge/Framework-FastAPI-green.svg](https://www.google.com/search?q=https://img.shields.io/badge/Framework-FastAPI-green.svg)" alt="FastAPI"\>
-\<img src="[https://img.shields.io/badge/Frontend-Vanilla\_JS-yellow.svg](https://www.google.com/search?q=https://img.shields.io/badge/Frontend-Vanilla_JS-yellow.svg)" alt="Vanilla JS"\>
-\<img src="[https://img.shields.io/badge/License-MIT-blue.svg](https://www.google.com/search?q=https://img.shields.io/badge/License-MIT-blue.svg)" alt="License"\>
+\<strong\>Tags:\</strong\> \<code\>Python\</code\>, \<code\>FastAPI\</code\>, \<code\>Vanilla JS\</code\>, \<code\>LlamaParse\</code\>, \<code\>Google Gemini\</code\>, \<code\>Full-Stack\</code\>, \<code\>Data-Extraction\</code\>, \<code\>AI\</code\>
 \</p\>
 
 This full-stack web application extracts, analyzes, and visualizes data from maritime Statement of Facts (SOF) documents. It offers a user-friendly interface to upload SOF files (PDF, DOCX), intelligently parses them, and structures the data into a clean JSON format. The processed information is displayed on an interactive dashboard featuring sortable tables and a Gantt chart timeline of events.
@@ -76,8 +71,9 @@ Follow these instructions to get the project running locally.
 Clone this repository to your local machine:
 
 ```bash
-git clone <repository-url>
-cd <repository-directory>
+# [INSERT YOUR REPOSITORY CLONE URL HERE]
+git clone https://your-repository-url.com/repo.git
+cd repo
 ```
 
 ### 2\. Set Up Environment Variables
