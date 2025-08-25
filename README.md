@@ -1,14 +1,4 @@
-Of course. Here is a revised `readme.md` that uses placeholders for images and links and includes relevant tags.
-
------
-
 # Maritime SOF Analytics 🚢
-
-[INSERT PROJECT DEMO GIF HERE]
-
-\<p align="center"\>
-\<strong\>Tags:\</strong\> \<code\>Python\</code\>, \<code\>FastAPI\</code\>, \<code\>Vanilla JS\</code\>, \<code\>LlamaParse\</code\>, \<code\>Google Gemini\</code\>, \<code\>Full-Stack\</code\>, \<code\>Data-Extraction\</code\>, \<code\>AI\</code\>
-\</p\>
 
 This full-stack web application extracts, analyzes, and visualizes data from maritime Statement of Facts (SOF) documents. It offers a user-friendly interface to upload SOF files (PDF, DOCX), intelligently parses them, and structures the data into a clean JSON format. The processed information is displayed on an interactive dashboard featuring sortable tables and a Gantt chart timeline of events.
 
@@ -16,13 +6,12 @@ This full-stack web application extracts, analyzes, and visualizes data from mar
 
 ## 🚀 Key Features
 
-  * [cite\_start]**Intelligent Document Parsing**: Uses **LlamaParse** to accurately extract text from PDF and DOCX files[cite: 1].
+  * **Intelligent Document Parsing**: Uses **LlamaParse** to accurately extract text from PDF and DOCX files.
   * **AI-Powered Data Structuring**: Leverages the **Google Gemini API** with JSON mode to convert raw text into a structured, validated schema.
   * **Modern Backend**: Built with **FastAPI**, providing a robust and asynchronous API for efficient file processing.
   * **Interactive Frontend**: A sleek, responsive user interface built with HTML, CSS, and vanilla JavaScript without any heavy frameworks.
   * **Rich Data Visualization**: Includes a detailed table view and a dynamic Gantt chart to visualize the timeline of maritime operations.
   * **Flexible Data Export**: Allows users to download the structured data in both **CSV** and **JSON** formats for easy integration.
-  * **Secure and Private**: Ensures user privacy by clearing processed data from the server after each request is completed.
 
 -----
 
