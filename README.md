@@ -1,5 +1,8 @@
 Here is the updated `readme.md` with the requested note in the setup section.
 
+# DEMO LINK :
+https://project-sof-analysis.netlify.app/
+
 # Maritime SOF Analytics 🚢
 
 This full-stack web application extracts, analyzes, and visualizes data from maritime Statement of Facts (SOF) documents. It offers a user-friendly interface to upload SOF files (PDF, DOCX), intelligently parses them, and structures the data into a clean JSON format. The processed information is displayed on an interactive dashboard featuring sortable tables and a Gantt chart timeline of events.
@@ -125,7 +128,7 @@ async def serve_data_page():
 
 ## 🔗 Links and Resources
 
-  * **LlamaParse**: [Get your API key](https://www.google.com/search?q=https://cloud.llamaindex.ai/)
+  * **LlamaParse**: [Get your API key](https://docs.cloud.llamaindex.ai/api_key)
   * **Google AI Studio**: [Get your Gemini API key](https://aistudio.google.com/app/apikey)
   * **FastAPI**: [Official Documentation](https://fastapi.tiangolo.com/)
   * **Pydantic**: [Documentation](https://docs.pydantic.dev/latest/)
